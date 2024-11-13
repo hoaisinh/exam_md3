@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'war'
+    id 'application' // Áp dụng plugin ứng dụng Java
 }
 
 group 'com.example'
@@ -10,24 +11,35 @@ repositories {
     mavenCentral()
 }
 
+application {
+    mainClassName = 'com.example.tekushop.MainS3'  // Set your main class here
+}
+compileJava.options.encoding = 'UTF-8'
 ext {
+    servletApiVersion = '4.0.1'
+    jstlVersion = '1.2'
     junitVersion = '5.9.2'
 }
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+//sourceCompatibility = '1.8'
+//targetCompatibility = '1.8'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
 dependencies {
-    compileOnly('javax.servlet:javax.servlet-api:4.0.1')
+    // Thêm AWS SDK cho S3
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.12.116'  // Phiên bản AWS SDK
 
+    // Các thư viện khác (nếu có)
+    implementation 'com.amazonaws:aws-java-sdk-core:1.12.116'
+    compileOnly "javax.servlet:javax.servlet-api:${servletApiVersion}"
+    implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
 }
 
 test {
-    useJUnitPlatform()
-}
+    useJUnitPlatform()}
